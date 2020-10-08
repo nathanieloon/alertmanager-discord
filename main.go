@@ -68,10 +68,17 @@ type discordEmbedField struct {
 func main() {
 	webhookUrl := os.Getenv("DISCORD_WEBHOOK")
 	whURL := flag.String("webhook.url", webhookUrl, "")
+	discordRole := os.Getenv("DISCORD_ROLE")
+	dcRole := flag.String("webhook.role", discordRole, "")
 	flag.Parse()
 
 	if webhookUrl == "" && *whURL == "" {
 		fmt.Fprintf(os.Stderr, "error: environment variable DISCORD_WEBHOOK not found\n")
+		os.Exit(1)
+	}
+
+	if discordRole == "" && *dcRole == "" {
+		fmt.Fprintf(os.Stderr, "error: environment variable DISCORD_ROLE not found\n")
 		os.Exit(1)
 	}
 
@@ -111,7 +118,7 @@ func main() {
 			}
 
 			if amo.CommonAnnotations.Summary != "" {
-				DO.Content = fmt.Sprintf(" === %s === \n", amo.CommonAnnotations.Summary)
+				DO.Content = fmt.Sprintf("%s\n", *dcRole)
 			}
 
 			for _, alert := range alerts {
