@@ -127,6 +127,10 @@ func main() {
 					realname = alert.Labels["exported_instance"]
 				}
 
+				if alert.Labels["hostname"] != "" {
+					realname = alert.Labels["hostname"]
+				}
+
 				RichEmbed.Fields = append(RichEmbed.Fields, discordEmbedField{
 					Name:  fmt.Sprintf("[%s]: %s on %s", strings.ToUpper(status), alert.Labels["alertname"], realname),
 					Value: alert.Annotations.Description,
