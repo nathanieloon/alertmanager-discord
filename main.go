@@ -78,11 +78,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if discordRole == "" && *dcRole == "" {
-		fmt.Fprintf(os.Stderr, "error: environment variable DISCORD_ROLE not found\n")
-		os.Exit(1)
-	}
-
 	fmt.Fprintf(os.Stdout, "info: Listening on 0.0.0.0:9094\n")
 	http.ListenAndServe(":9094", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		b, err := ioutil.ReadAll(r.Body)
@@ -117,9 +112,13 @@ func main() {
 			} else if status == "resolved" {
 				RichEmbed.Color = ColorGreen
 			}
-
+			
 			if amo.CommonAnnotations.Summary != "" {
-				DO.Content = fmt.Sprintf("%s\n", *dcRole)
+				if *dcRole == "" {
+					DO.Content = fmt.Sprintf(" === %s === \n", amo.CommonAnnotations.Summary)
+				} else {
+					DO.Content = fmt.Sprintf("%s\n", *dcRole)
+				}
 			}
 			
 			DO.Embeds = []discordEmbed{RichEmbed}
